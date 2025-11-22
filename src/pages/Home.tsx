@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowRight, BarChart2, Globe, Shield, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
