@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Play, TrendingUp, Shield, BookOpen, ExternalLink, Zap, BarChart2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Services: React.FC = () => {
   return (
@@ -92,10 +94,10 @@ const Services: React.FC = () => {
                 Take your trading knowledge to the next level through structured courses and mentorship. We cover chart analysis, trading psychology, and smart strategy creation.
               </p>
               <div className="mt-auto">
-                <a href="/ebook" className="flex items-center justify-between px-4 py-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors group">
+                <Link to="/ebook" className="flex items-center justify-between px-4 py-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors group">
                     <span className="font-semibold text-sm">Join Masterclass</span>
                     <ExternalLink size={16} className="text-gray-400 group-hover:text-white transition-colors" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
