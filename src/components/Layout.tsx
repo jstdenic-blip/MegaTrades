@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { TrendingUp, Menu, X, ChevronRight } from 'lucide-react';
@@ -30,9 +31,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <div className="hidden md:block">
               <div className="ml-10 flex items-center space-x-8">
                 <Link to="/" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/')}`}>Home</Link>
+                <Link to="/services" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/services')}`}>Services</Link>
+                <Link to="/ebook" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/ebook')}`}>eBook</Link>
                 <Link to="/gallery" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/gallery')}`}>Gallery</Link>
+                <Link to="/about" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/about')}`}>About</Link>
+                <Link to="/contact" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/contact')}`}>Contact</Link>
                 <Link to="/register" className="px-6 py-2.5 rounded-full bg-gradient-to-r from-secondary to-blue-600 text-white text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all transform hover:-translate-y-0.5">
-                  Start Trading
+                  Join Now
                 </Link>
               </div>
             </div>
@@ -46,10 +51,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
 
         {/* Mobile menu */}
-        <div className={`md:hidden absolute w-full bg-dark-900/95 backdrop-blur-xl border-b border-white/5 transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-64' : 'max-h-0'}`}>
+        <div className={`md:hidden absolute w-full bg-dark-900/95 backdrop-blur-xl border-b border-white/5 transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-96' : 'max-h-0'}`}>
           <div className="px-4 pt-2 pb-4 space-y-2">
             <Link to="/" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Home</Link>
+            <Link to="/services" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Services</Link>
+            <Link to="/ebook" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">eBook</Link>
             <Link to="/gallery" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Gallery</Link>
+            <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">About</Link>
+            <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Contact</Link>
             <Link to="/register" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-secondary bg-blue-500/10">Join Now</Link>
           </div>
         </div>
@@ -74,9 +83,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <div>
               <h3 className="text-white font-bold mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm text-gray-500">
-                <li><Link to="/" className="hover:text-secondary transition-colors">Home</Link></li>
+                <li><Link to="/services" className="hover:text-secondary transition-colors">Services</Link></li>
+                <li><Link to="/ebook" className="hover:text-secondary transition-colors">Get eBook</Link></li>
                 <li><Link to="/gallery" className="hover:text-secondary transition-colors">Analysis Gallery</Link></li>
-                <li><Link to="/register" className="hover:text-secondary transition-colors">Open Account</Link></li>
+                <li><Link to="/contact" className="hover:text-secondary transition-colors">Contact Us</Link></li>
               </ul>
             </div>
             <div>
