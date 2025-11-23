@@ -28,7 +28,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <span className="text-xl font-bold tracking-wide text-white">MEGA<span className="text-secondary">TRADE</span></span>
             </Link>
             
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <div className="ml-10 flex items-center space-x-6 lg:space-x-8">
                 <Link to="/" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/')}`}>Home</Link>
                 <Link to="/services" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/services')}`}>Services</Link>
@@ -42,7 +42,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               </div>
             </div>
 
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white p-2 rounded-lg hover:bg-white/5">
                 {isMenuOpen ? <X /> : <Menu />}
               </button>
@@ -50,8 +50,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
         </div>
 
-        {/* Mobile menu - Increased height to max-h-[600px] to ensure all 7 items fit */}
-        <div className={`md:hidden absolute w-full bg-dark-900/95 backdrop-blur-xl border-b border-white/5 transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-[600px] shadow-2xl' : 'max-h-0'}`}>
+        {/* Mobile menu */}
+        <div className={`lg:hidden absolute w-full bg-dark-900/95 backdrop-blur-xl border-b border-white/5 transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-[600px] shadow-2xl' : 'max-h-0'}`}>
           <div className="px-4 pt-2 pb-6 space-y-2">
             <Link to="/" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Home</Link>
             <Link to="/services" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Services</Link>
