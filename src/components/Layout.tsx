@@ -29,7 +29,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </Link>
             
             <div className="hidden md:block">
-              <div className="ml-10 flex items-center space-x-8">
+              <div className="ml-10 flex items-center space-x-6 lg:space-x-8">
                 <Link to="/" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/')}`}>Home</Link>
                 <Link to="/services" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/services')}`}>Services</Link>
                 <Link to="/ebook" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/ebook')}`}>eBook</Link>
@@ -50,16 +50,16 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
         </div>
 
-        {/* Mobile menu */}
-        <div className={`md:hidden absolute w-full bg-dark-900/95 backdrop-blur-xl border-b border-white/5 transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-96' : 'max-h-0'}`}>
-          <div className="px-4 pt-2 pb-4 space-y-2">
+        {/* Mobile menu - Increased height to max-h-[600px] to ensure all 7 items fit */}
+        <div className={`md:hidden absolute w-full bg-dark-900/95 backdrop-blur-xl border-b border-white/5 transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-[600px] shadow-2xl' : 'max-h-0'}`}>
+          <div className="px-4 pt-2 pb-6 space-y-2">
             <Link to="/" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Home</Link>
             <Link to="/services" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Services</Link>
             <Link to="/ebook" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">eBook</Link>
             <Link to="/gallery" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Gallery</Link>
             <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">About</Link>
             <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Contact</Link>
-            <Link to="/register" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-secondary bg-blue-500/10">Join Now</Link>
+            <Link to="/register" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-secondary bg-blue-500/10 mt-4">Join Now</Link>
           </div>
         </div>
       </nav>
