@@ -36,9 +36,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 <Link to="/gallery" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/gallery')}`}>Gallery</Link>
                 <Link to="/about" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/about')}`}>About</Link>
                 <Link to="/contact" className={`transition-colors duration-200 text-sm uppercase tracking-wider ${isActive('/contact')}`}>Contact</Link>
-                <Link to="/register" className="px-6 py-2.5 rounded-full bg-gradient-to-r from-secondary to-blue-600 text-white text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all transform hover:-translate-y-0.5">
-                  Join Now
-                </Link>
               </div>
             </div>
 
@@ -59,7 +56,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <Link to="/gallery" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Gallery</Link>
             <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">About</Link>
             <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-white/5">Contact</Link>
-            <Link to="/register" onClick={() => setIsMenuOpen(false)} className="block px-3 py-3 rounded-lg text-base font-medium text-secondary bg-blue-500/10 mt-4">Join Now</Link>
           </div>
         </div>
       </nav>
