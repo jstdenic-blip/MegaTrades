@@ -17,6 +17,23 @@ const Ebook: React.FC = () => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Dynamically load KoraPay script to ensure it is available
+  useEffect(() => {
+    if (!window.Korapay) {
+      const script = document.createElement('script');
+      script.src = "https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js";
+      script.async = true;
+      document.body.appendChild(script);
+      
+      return () => {
+        // Optional cleanup
+        if (document.body.contains(script)) {
+            // keep it to avoid reloading if user navigates back
+        }
+      };
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -24,19 +41,27 @@ const Ebook: React.FC = () => {
   const handlePayment = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!acceptedTerms) {
-      alert("Please accept the terms and conditions.");
+    // 1. Validation
+    if (!formData.email || !formData.firstName || !formData.lastName || !formData.phone) {
+      alert('Please fill in all fields.');
       return;
     }
 
-    if (!window.Korapay) {
-      alert("Payment service is initializing. Please try again in a moment.");
+    if (!acceptedTerms) {
+      alert("Please accept the terms and conditions to proceed.");
+      return;
+    }
+
+    // 2. Check if KoraPay is loaded
+    if (typeof window.Korapay === 'undefined') {
+      alert("Payment service is loading. Please wait 3 seconds and click Pay again.");
       return;
     }
 
     setLoading(true);
 
     try {
+      // 3. Initialize Payment
       window.Korapay.initialize({
         key: 'pk_live_yRJ1XJDqp6P6YjrjY9fargo1LiHgQJrefZ',
         amount: 55000,
@@ -49,17 +74,18 @@ const Ebook: React.FC = () => {
         },
         onClose: () => {
           setLoading(false);
-          alert('Payment cancelled.');
+          alert('You closed the payment window.');
         },
         onSuccess: () => {
           setLoading(false);
+          // Redirect to Telegram Channel
           window.location.href = 'https://t.me/+SdoT8IlB2342OGVk';
         }
       });
     } catch (error) {
       console.error("Payment Error:", error);
       setLoading(false);
-      alert("An error occurred initializing payment. Please check your connection.");
+      alert("An error occurred initializing payment. Please refresh the page.");
     }
   };
 
@@ -156,7 +182,7 @@ const Ebook: React.FC = () => {
                  <h3 className="text-xl font-bold">Secure Checkout</h3>
               </div>
 
-              <form onSubmit={handlePayment} className="space-y-4">
+              <form id="paymentForm" onSubmit={handlePayment} className="space-y-4">
                  <div className="grid grid-cols-2 gap-4">
                     <div>
                        <label className="text-xs text-gray-500 font-bold ml-1 mb-1 block">First Name</label>
