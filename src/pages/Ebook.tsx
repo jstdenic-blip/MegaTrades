@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookOpen, Check, Shield, Lock, CreditCard } from 'lucide-react';
 
 declare global {
@@ -14,24 +14,24 @@ const Ebook: React.FC = () => {
     email: '',
     phone: ''
   });
+
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [koraReady, setKoraReady] = useState(false);
 
-  // Dynamically load KoraPay script to ensure it is available
+  // ✅ Load KoraPay Script
   useEffect(() => {
-    if (!window.Korapay) {
-      const script = document.createElement('script');
-      script.src = "https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js";
-      script.async = true;
-      document.body.appendChild(script);
-      
-      return () => {
-        // Optional cleanup
-        if (document.body.contains(script)) {
-            // keep it to avoid reloading if user navigates back
-        }
-      };
-    }
+    if (document.querySelector('#korapay-script')) return;
+
+    const script = document.createElement('script');
+    script.id = 'korapay-script';
+    script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js';
+    script.async = true;
+
+    script.onload = () => setKoraReady(true);
+    script.onerror = () => setKoraReady(false);
+
+    document.body.appendChild(script);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,51 +41,50 @@ const Ebook: React.FC = () => {
   const handlePayment = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 1. Validation
     if (!formData.email || !formData.firstName || !formData.lastName || !formData.phone) {
       alert('Please fill in all fields.');
       return;
     }
 
     if (!acceptedTerms) {
-      alert("Please accept the terms and conditions to proceed.");
+      alert("Please accept the terms and conditions.");
       return;
     }
 
-    // 2. Check if KoraPay is loaded
-    if (typeof window.Korapay === 'undefined') {
-      alert("Payment service is loading. Please wait 3 seconds and click Pay again.");
+    if (!koraReady || typeof window === 'undefined' || !window.Korapay) {
+      alert("Payment system not ready. Please refresh the page.");
       return;
     }
 
     setLoading(true);
 
     try {
-      // 3. Initialize Payment
       window.Korapay.initialize({
         key: 'pk_live_yRJ1XJDqp6P6YjrjY9fargo1LiHgQJrefZ',
-        amount: 55000,
+        amount: 5500000, // ✅ ₦55,000 (kobo format)
         currency: 'NGN',
-        reference: 'DenicFX-' + Date.now(),
+        reference: 'MegaTrades-' + Date.now(),
         customer: {
           name: `${formData.firstName} ${formData.lastName}`,
           email: formData.email,
           phone_number: formData.phone
         },
+
         onClose: () => {
           setLoading(false);
-          alert('You closed the payment window.');
+          alert('Payment window closed');
         },
-        onSuccess: () => {
+
+        onSuccess: (data: any) => {
           setLoading(false);
-          // Redirect to Telegram Channel
           window.location.href = 'https://t.me/+SdoT8IlB2342OGVk';
         }
       });
-    } catch (error) {
-      console.error("Payment Error:", error);
+
+    } catch (err) {
+      console.error(err);
       setLoading(false);
-      alert("An error occurred initializing payment. Please refresh the page.");
+      alert("Payment failed to initialize.");
     }
   };
 
@@ -102,12 +101,13 @@ const Ebook: React.FC = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 pb-24">
+
         {/* INFO SECTION */}
         <div className="glass-panel p-8 rounded-3xl mb-12">
           <p className="text-gray-300 leading-relaxed mb-8 text-lg">
-            This personal trading eBook is more than just a journal — it’s a complete learning guide designed to help you grow faster and trade smarter. It teaches you how to think like a trader, act with discipline, and make calculated decisions.
+            This personal trading eBook is more than just a journal — it’s a complete learning guide designed to help you grow faster and trade smarter.
           </p>
-          
+
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div className="bg-dark-900 p-6 rounded-2xl">
               <h3 className="font-bold text-xl mb-4 text-white">What You Will Learn</h3>
@@ -125,148 +125,84 @@ const Ebook: React.FC = () => {
                 ))}
               </ul>
             </div>
+
             <div className="bg-dark-900 rounded-2xl overflow-hidden relative">
-               <img 
-                 src="https://images.unsplash.com/photo-1611974765270-ca1258634369?q=80&w=800&auto=format&fit=crop" 
-                 className="w-full h-full object-cover opacity-50" 
-                 alt="Preview" 
-               />
-               <div className="absolute inset-0 flex items-center justify-center">
-                 <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
-                    <BookOpen className="text-white" />
-                 </div>
-               </div>
+              <img 
+                src="https://images.unsplash.com/photo-1611974765270-ca1258634369?q=80&w=800&auto=format&fit=crop" 
+                className="w-full h-full object-cover opacity-50" 
+                alt="Preview" 
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
+                  <BookOpen className="text-white" />
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="flex items-center justify-center gap-4 bg-secondary/10 p-6 rounded-xl border border-secondary/20">
-             <Shield className="text-secondary w-8 h-8" />
-             <div className="text-center md:text-left">
-                <p className="text-white font-bold">Trading involves risk.</p>
-                <p className="text-sm text-gray-400">Knowledge, structure, and discipline give you the edge.</p>
-             </div>
+            <Shield className="text-secondary w-8 h-8" />
+            <div className="text-center md:text-left">
+              <p className="text-white font-bold">Trading involves risk.</p>
+              <p className="text-sm text-gray-400">Knowledge, structure, and discipline give you the edge.</p>
+            </div>
           </div>
         </div>
 
-        {/* PRICING & FORM */}
+        {/* PRICING + PAYMENT */}
         <div className="grid md:grid-cols-2 gap-8">
-           {/* PRICING CARD */}
-           <div className="glass-panel p-8 rounded-3xl h-fit border-t-4 border-secondary sticky top-24">
-              <h3 className="text-lg font-bold text-gray-400 uppercase tracking-wider mb-4">Pricing</h3>
-              <div className="flex items-end gap-2 mb-2">
-                 <span className="text-4xl font-bold text-white">₦55,000</span>
-                 <span className="text-lg text-gray-500 line-through mb-1">₦120,000</span>
-              </div>
-              <div className="inline-block px-3 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded mb-6">
-                 LIMITED TIME DISCOUNT
-              </div>
-              <div className="space-y-4 pt-6 border-t border-white/10">
-                 <div className="flex items-center gap-3 text-sm text-gray-300">
-                    <Check size={16} className="text-secondary" /> Lifetime Access
-                 </div>
-                 <div className="flex items-center gap-3 text-sm text-gray-300">
-                    <Check size={16} className="text-secondary" /> Free Updates
-                 </div>
-                 <div className="flex items-center gap-3 text-sm text-gray-300">
-                    <Check size={16} className="text-secondary" /> Private Community Access
-                 </div>
-              </div>
-           </div>
 
-           {/* PAYMENT FORM */}
-           <div className="glass-panel p-8 rounded-3xl">
-              <div className="flex items-center gap-3 mb-6">
-                 <div className="p-2 bg-dark-800 rounded-lg">
-                    <CreditCard className="text-white" />
-                 </div>
-                 <h3 className="text-xl font-bold">Secure Checkout</h3>
+          {/* PRICING */}
+          <div className="glass-panel p-8 rounded-3xl h-fit border-t-4 border-secondary sticky top-24">
+            <h3 className="text-lg font-bold text-gray-400 uppercase mb-4">Pricing</h3>
+            <div className="flex items-end gap-2 mb-2">
+              <span className="text-4xl font-bold text-white">₦55,000</span>
+              <span className="text-lg text-gray-500 line-through">₦120,000</span>
+            </div>
+            <div className="inline-block px-3 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded mb-6">
+              LIMITED TIME DISCOUNT
+            </div>
+          </div>
+
+          {/* FORM */}
+          <div className="glass-panel p-8 rounded-3xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-dark-800 rounded-lg">
+                <CreditCard className="text-white" />
+              </div>
+              <h3 className="text-xl font-bold">Secure Checkout</h3>
+            </div>
+
+            <form onSubmit={handlePayment} className="space-y-4">
+
+              <div className="grid grid-cols-2 gap-4">
+                <input name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} className="glass-input" required />
+                <input name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} className="glass-input" required />
               </div>
 
-              <form id="paymentForm" onSubmit={handlePayment} className="space-y-4">
-                 <div className="grid grid-cols-2 gap-4">
-                    <div>
-                       <label className="text-xs text-gray-500 font-bold ml-1 mb-1 block">First Name</label>
-                       <input 
-                         type="text" 
-                         name="firstName"
-                         value={formData.firstName}
-                         onChange={handleChange}
-                         required
-                         className="glass-input" 
-                         placeholder="John"
-                       />
-                    </div>
-                    <div>
-                       <label className="text-xs text-gray-500 font-bold ml-1 mb-1 block">Last Name</label>
-                       <input 
-                         type="text" 
-                         name="lastName"
-                         value={formData.lastName}
-                         onChange={handleChange}
-                         required
-                         className="glass-input" 
-                         placeholder="Doe"
-                       />
-                    </div>
-                 </div>
-                 
-                 <div>
-                    <label className="text-xs text-gray-500 font-bold ml-1 mb-1 block">Email Address</label>
-                    <input 
-                      type="email" 
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="glass-input" 
-                      placeholder="john@example.com"
-                    />
-                 </div>
+              <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="glass-input" required />
+              <input type="tel" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} className="glass-input" required />
 
-                 <div>
-                    <label className="text-xs text-gray-500 font-bold ml-1 mb-1 block">Phone Number</label>
-                    <input 
-                      type="tel" 
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      required
-                      className="glass-input" 
-                      placeholder="+234..."
-                    />
-                 </div>
+              <label className="flex gap-3 text-xs text-gray-400">
+                <input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} />
+                I accept the terms and understand payments are final.
+              </label>
 
-                 <div className="pt-4 pb-2">
-                    <label className="flex items-start gap-3 cursor-pointer group">
-                       <input 
-                         type="checkbox" 
-                         checked={acceptedTerms}
-                         onChange={(e) => setAcceptedTerms(e.target.checked)}
-                         className="mt-1 accent-secondary" 
-                       />
-                       <span className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">
-                          I accept the terms. I understand that all payments are final and <span className="text-red-400 font-bold">non-refundable</span>.
-                       </span>
-                    </label>
-                 </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-4 bg-gradient-to-r from-secondary to-blue-600 rounded-xl font-bold text-white"
+              >
+                {loading ? 'Processing...' : 'Pay ₦55,000'}
+              </button>
 
-                 <button 
-                   type="submit" 
-                   disabled={loading}
-                   className="w-full py-4 bg-gradient-to-r from-secondary to-blue-600 rounded-xl font-bold text-white hover:shadow-lg hover:shadow-blue-500/25 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                 >
-                    {loading ? 'Processing...' : (
-                        <>
-                            Pay ₦55,000 <Lock size={16} />
-                        </>
-                    )}
-                 </button>
+              <p className="text-center text-[10px] text-gray-600 mt-4">
+                Secured by KoraPay • SSL Encryption
+              </p>
 
-                 <p className="text-center text-[10px] text-gray-600 mt-4">
-                    Secured by KoraPay. 256-bit SSL Encryption.
-                 </p>
-              </form>
-           </div>
+            </form>
+          </div>
+
         </div>
       </div>
     </>
