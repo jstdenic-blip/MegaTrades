@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Play, TrendingUp, Shield, BookOpen, ExternalLink, Zap, BarChart2 } from 'lucide-react';
+import { Play, TrendingUp, BookOpen, ExternalLink, Zap, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Services: React.FC = () => {
